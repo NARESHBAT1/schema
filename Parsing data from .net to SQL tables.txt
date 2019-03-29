@@ -1,0 +1,24 @@
+void IFileParser.WriteChunkData(DataTable table, string distinationTable, 
+        IList<KeyValuePair<string, string>> mapList)
+{
+    using (var bulkCopy = new SqlBulkCopy(_connectionString, SqlBulkCopyOptions.Default))
+    {               
+        bulkCopy.Bulk
+        bulkCopy.DestinationTableName = distinationTable;
+        foreach (KeyValuePair<string, string> map in mapList)
+        {
+            bulkCopy.ColumnMappings.Add(map.Key, map.Value);
+        }
+        bulkCopy.WriteToServer(table, DataRowState.Added);
+    }
+} private DataTable CreateEmptyDataTable(string firstLine)
+{
+    IList<string> columnList = Split(firstLine);
+    var dataTable = new DataTable("tblData");
+    dataTable.Columns.AddRange(columnList.Select(v => new DataColumn(v)).ToArray());
+    return dataTable;
+}
+
+
+Bulk Insert
+
